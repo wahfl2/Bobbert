@@ -3,5 +3,16 @@
   "minVersion": "0.8.3-GTNH",
   "refmap": "mixins.bobbert.refmap.json",
   "target": "@env(DEFAULT)",
-  "compatibilityLevel": "JAVA_8"
+  "compatibilityLevel": "JAVA_8",
+  "plugin": "com.wahfl2.bobbert.compat.CompatibilityMixinPlugin",
+  "package": "com.wahfl2.bobbert.mixin",
+  "client": [
+    "AnvilChunkLoaderMixin",
+    "ChunkProviderClientMixin",
+    "IntegratedServerMixin",
+    "MinecraftMixin",
+    "NetHandlerPlayClientMixin",
+    "angelica.AngelicaWorldClientMixin",
+    "angelica.AngelicaChunkProviderClientMixin"
+  ]
 }

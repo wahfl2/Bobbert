@@ -8,6 +8,7 @@ public class ClientProxy extends CommonProxy {
 
     @Override
     public void preInit(FMLPreInitializationEvent event) {
+        Bobbert.LOG.info("Hello from Bobbert!");
         MinecraftForge.EVENT_BUS.register(Bobbert.INSTANCE);
     }
 }

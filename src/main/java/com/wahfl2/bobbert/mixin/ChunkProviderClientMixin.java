@@ -2,6 +2,10 @@ package com.wahfl2.bobbert.mixin;
 
 import javax.annotation.Nullable;
 
+import me.jellysquid.mods.sodium.client.render.chunk.map.ChunkStatus;
+import me.jellysquid.mods.sodium.client.render.chunk.map.ChunkTrackerHolder;
+import com.llamalad7.mixinextras.sugar.Local;
+import com.wahfl2.bobbert.compat.LoadedMods;
 import net.minecraft.client.multiplayer.ChunkProviderClient;
 import net.minecraft.client.multiplayer.WorldClient;
 import net.minecraft.nbt.NBTTagCompound;
@@ -38,15 +42,25 @@ public class ChunkProviderClientMixin implements IChunkProviderClient {
     @Unique
     protected @Nullable NBTTagCompound chunkbert$ChunkReplacement;
 
+    @Unique
+    private WorldClient worldClient;
+
     @Inject(method = "<init>", at = @At("RETURN"))
     private void bobbyInit(World worldIn, CallbackInfo ci) {
         if (BobbertConfig.enabled)
             chunkbert$ChunkManager = new FakeChunkManager((WorldClient) worldIn, (ChunkProviderClient) (Object) this);
+
+        worldClient = (WorldClient) worldIn;
     }
 
     @Override
     public @Nullable FakeChunkManager chunkbert$getChunkManager() {
         return chunkbert$ChunkManager;
+    }
+
+    @Override
+    public @Nullable NBTTagCompound chunkbert$getChunkReplacement() {
+        return chunkbert$ChunkReplacement;
     }
 
     @Inject(method = "provideChunk", at = @At("RETURN"), cancellable = true)
@@ -88,7 +102,7 @@ public class ChunkProviderClientMixin implements IChunkProviderClient {
         chunkbert$ChunkReplacement = tag;
     }
 
-    @Inject(method = "unloadChunk", at = @At("RETURN"))
+    @Inject(method = "unloadChunk", at = @At("TAIL"))
     private void bobbyReplaceChunk(int chunkX, int chunkZ, CallbackInfo ci) {
         if (chunkbert$ChunkManager == null) {
             return;
@@ -96,9 +110,11 @@ public class ChunkProviderClientMixin implements IChunkProviderClient {
 
         NBTTagCompound tag = chunkbert$ChunkReplacement;
         chunkbert$ChunkReplacement = null;
+
         if (tag == null) {
             return;
         }
+
         chunkbert$ChunkManager.load(chunkX, chunkZ, tag, chunkbert$ChunkManager.getStorage());
     }
 
