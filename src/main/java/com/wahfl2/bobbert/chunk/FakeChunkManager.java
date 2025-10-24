@@ -13,6 +13,8 @@ import java.util.function.Supplier;
 
 import javax.annotation.Nullable;
 
+import com.wahfl2.bobbert.compat.angelica.ChunkStatus;
+import com.wahfl2.bobbert.compat.angelica.ChunkTrackerHolderWrapper;
 import it.unimi.dsi.fastutil.longs.*;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
@@ -256,6 +258,7 @@ public class FakeChunkManager {
 
     protected void load(int x, int z, Chunk chunk) {
         fakeChunks.put(ChunkPos.toLong(x, z), chunk);
+        ChunkTrackerHolderWrapper.get(world).onChunkStatusAdded(x, z, ChunkStatus.FLAG_ALL);
 
         world.markBlockRangeForRenderUpdate(x * 16, 0, z * 16, x * 16 + 15, 256, z * 16 + 15);
     }
@@ -268,6 +271,10 @@ public class FakeChunkManager {
             /* TODO fix lighting */
 
             world.loadedTileEntityList.removeAll(chunk.chunkTileEntityMap.values());
+
+            if (!willBeReplaced) {
+                ChunkTrackerHolderWrapper.get(world).onChunkStatusRemoved(x, z, ChunkStatus.FLAG_ALL);
+            }
 
             return true;
         }
