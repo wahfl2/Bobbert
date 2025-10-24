@@ -6,3 +6,9 @@ It accomplishes this goal by recording and storing (in `.minecraft/.bobby`) all 
 then can load and display at a later point when the chunk is outside the server's view-distance.
 
 Largely based on embeddedt's 1.12 port, [Chunkbert](https://github.com/Asek3/chunkbert).
+
+## Features
+
+- [x] Chunk caching
+- [ ] Extending render distance beyond 32
+- [ ] ~~Multi-world server support~~ (not planned)
