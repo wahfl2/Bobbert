@@ -1,29 +1,32 @@
 package com.wahfl2.bobbert.mixin;
 
+import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
+import com.llamalad7.mixinextras.sugar.Local;
 import net.minecraft.client.settings.GameSettings;
 import net.minecraft.server.integrated.IntegratedServer;
 
 import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Redirect;
 
 import com.wahfl2.bobbert.BobbertConfig;
 
 @Mixin(IntegratedServer.class)
 public class IntegratedServerMixin {
 
-    @Redirect(
+    @ModifyExpressionValue(
         method = "tick",
         at = @At(
             value = "FIELD",
             opcode = Opcodes.GETFIELD,
             target = "Lnet/minecraft/client/settings/GameSettings;renderDistanceChunks:I"))
-    private int getOverrideViewDistance(GameSettings instance) {
+    private int getOverrideViewDistance(int original) {
         int overwrite = BobbertConfig.viewDistanceOverwrite;
-        if (overwrite != 0) {
+        if (overwrite != 0 && BobbertConfig.enabled) {
             return overwrite;
         }
-        return instance.renderDistanceChunks;
+        return original;
     }
 }

@@ -8,6 +8,7 @@ public class BobbertConfig {
     public static boolean enabled = true;
 
     @Config.Comment("Do not load block entities (e.g. chests) in fake chunks.\nThese need updating every tick which can add up.\n\nEnabled by default because the render distance for block entities is usually smaller than the server-view distance anyway.")
+    @Config.RequiresWorldRestart
     public static boolean noBlockEntities = true;
 
     @Config.Comment("Delays the unloading of chunks which are outside your view distance.\nSaves you from having to reload all chunks when leaving the area for a short moment (e.g. cut scenes).\nDoes not work across dimensions.")

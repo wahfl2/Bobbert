@@ -2,10 +2,8 @@ package com.wahfl2.bobbert.mixin;
 
 import javax.annotation.Nullable;
 
-import me.jellysquid.mods.sodium.client.render.chunk.map.ChunkStatus;
-import me.jellysquid.mods.sodium.client.render.chunk.map.ChunkTrackerHolder;
-import com.llamalad7.mixinextras.sugar.Local;
-import com.wahfl2.bobbert.compat.LoadedMods;
+import cpw.mods.fml.client.event.ConfigChangedEvent;
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import net.minecraft.client.multiplayer.ChunkProviderClient;
 import net.minecraft.client.multiplayer.WorldClient;
 import net.minecraft.nbt.NBTTagCompound;
@@ -44,6 +42,17 @@ public class ChunkProviderClientMixin implements IChunkProviderClient {
 
     @Unique
     private WorldClient worldClient;
+
+    @Unique @SubscribeEvent
+    private void bobbert$configChanged(ConfigChangedEvent event) {
+        if (!event.modID.equals("bobbert")) return;
+
+        if (BobbertConfig.enabled) {
+            chunkbert$ChunkManager = new FakeChunkManager(worldClient, (ChunkProviderClient) (Object) this);
+        } else {
+            chunkbert$ChunkManager = null;
+        }
+    }
 
     @Inject(method = "<init>", at = @At("RETURN"))
     private void bobbyInit(World worldIn, CallbackInfo ci) {

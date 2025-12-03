@@ -1,8 +1,11 @@
 package com.wahfl2.bobbert.mixin.angelica;
 
 import com.gtnewhorizons.angelica.compat.mojang.ChunkPos;
+import com.wahfl2.bobbert.BobbertConfig;
 import com.wahfl2.bobbert.compat.angelica.DummyChunkTracker;
 import com.wahfl2.bobbert.ext.IChunkProviderClient;
+import cpw.mods.fml.client.event.ConfigChangedEvent;
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import me.jellysquid.mods.sodium.client.render.chunk.map.ChunkStatus;
 import me.jellysquid.mods.sodium.client.render.chunk.map.ChunkTracker;
 import me.jellysquid.mods.sodium.client.render.chunk.map.ChunkTrackerHolder;
@@ -29,16 +32,31 @@ public class AngelicaWorldClientMixin implements ChunkTrackerHolder {
     @Unique
     private IChunkProviderClient bobbert$chunkProvider;
 
+    @Unique @SubscribeEvent
+    private void bobbert$configChanged(ConfigChangedEvent event) {
+        if (!event.modID.equals("bobbert")) return;
+
+        if (BobbertConfig.enabled) {
+            angelica$tracker = new DummyChunkTracker();
+        } else {
+            angelica$tracker = bobbert$realTracker;
+        }
+    }
+
     @Inject(method = "<init>", at = @At("TAIL"))
     private void init(CallbackInfo ci) {
         bobbert$realTracker = angelica$tracker;
-        angelica$tracker = new DummyChunkTracker();
-
         bobbert$chunkProvider = (IChunkProviderClient) clientChunkProvider;
+
+        if (BobbertConfig.enabled) {
+            angelica$tracker = new DummyChunkTracker();
+        }
     }
 
     @Inject(method = "doPreChunk", at = @At("TAIL"))
     private void notifyTracker(int x, int z, boolean load, CallbackInfo ci) {
+        if (!BobbertConfig.enabled) return;
+
         if (load) {
             if (bobbert$chunkProvider.chunkbert$getChunkManager().getChunk(x, z) == null) {
                 ChunkTrackerHolder.get((WorldClient)(Object) this).onChunkStatusAdded(x, z, ChunkStatus.FLAG_ALL);
