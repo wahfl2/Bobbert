@@ -1,7 +1,7 @@
 package com.wahfl2.bobbert.compat.angelica;
 
-import me.jellysquid.mods.sodium.client.render.chunk.map.ChunkTracker;
-import me.jellysquid.mods.sodium.client.render.chunk.map.ChunkTrackerHolder;
+import org.embeddedt.embeddium.impl.render.chunk.map.ChunkTracker;
+import org.embeddedt.embeddium.impl.render.chunk.map.ChunkTrackerHolder;
 import net.minecraft.client.multiplayer.WorldClient;
 
 public class ChunkTrackerHolderWrapper {
