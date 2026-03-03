@@ -6,9 +6,9 @@ import com.wahfl2.bobbert.compat.angelica.DummyChunkTracker;
 import com.wahfl2.bobbert.ext.IChunkProviderClient;
 import cpw.mods.fml.client.event.ConfigChangedEvent;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import me.jellysquid.mods.sodium.client.render.chunk.map.ChunkStatus;
-import me.jellysquid.mods.sodium.client.render.chunk.map.ChunkTracker;
-import me.jellysquid.mods.sodium.client.render.chunk.map.ChunkTrackerHolder;
+import org.embeddedt.embeddium.impl.render.chunk.map.ChunkStatus;
+import org.embeddedt.embeddium.impl.render.chunk.map.ChunkTracker;
+import org.embeddedt.embeddium.impl.render.chunk.map.ChunkTrackerHolder;
 import net.minecraft.client.multiplayer.ChunkProviderClient;
 import net.minecraft.client.multiplayer.WorldClient;
 import org.spongepowered.asm.mixin.Mixin;
@@ -22,7 +22,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public class AngelicaWorldClientMixin implements ChunkTrackerHolder {
     /* Shadows the one in Angelica's Mixin */
     @SuppressWarnings("MissingUnique")
-    private ChunkTracker angelica$tracker;
+    private ChunkTracker celeritas$tracker;
 
     private ChunkTracker bobbert$realTracker;
 
@@ -37,19 +37,19 @@ public class AngelicaWorldClientMixin implements ChunkTrackerHolder {
         if (!event.modID.equals("bobbert")) return;
 
         if (BobbertConfig.enabled) {
-            angelica$tracker = new DummyChunkTracker();
+            celeritas$tracker = new DummyChunkTracker();
         } else {
-            angelica$tracker = bobbert$realTracker;
+            celeritas$tracker = bobbert$realTracker;
         }
     }
 
     @Inject(method = "<init>", at = @At("TAIL"))
     private void init(CallbackInfo ci) {
-        bobbert$realTracker = angelica$tracker;
+        bobbert$realTracker = celeritas$tracker;
         bobbert$chunkProvider = (IChunkProviderClient) clientChunkProvider;
 
         if (BobbertConfig.enabled) {
-            angelica$tracker = new DummyChunkTracker();
+            celeritas$tracker = new DummyChunkTracker();
         }
     }
 
