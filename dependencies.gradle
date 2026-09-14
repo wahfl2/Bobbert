@@ -37,5 +37,5 @@ dependencies {
     //runtimeOnlyNonPublishable("com.github.GTNewHorizons:NotEnoughItems:2.8.72-GTNH:dev")
     api("com.github.GTNewHorizons:GTNHLib:0.9.33:dev")
 
-    compileOnly("com.github.GTNewHorizons:Angelica:2.1.0:dev")
+        compileOnly("com.github.GTNewHorizons:Angelica:2.2.10:dev")
 }
